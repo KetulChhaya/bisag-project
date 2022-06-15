@@ -6,13 +6,13 @@ const express = require("express");
 // const GridFsStorage = require("multer-gridfs-storage");
 // const Grid = require("gridfs-stream");
 // const methodOverride = require("method-override");
-// const bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 
 require("./db/conn");
+require("./db/pdfConn");
 const userRoutes = require("./routes/user");
 const generalRoutes = require("./routes/general");
-const pdfRoutes = require("./routes/pdf");
-
+const pdfRoutes = require("./db/pdfConn");
 const app = express();
 
 // app.use(bodyParser.json());
@@ -21,6 +21,8 @@ app.use(express.json());
 app.use("/api/user", userRoutes);
 app.use("/api/general/", generalRoutes);
 app.use("/api/pdf", pdfRoutes);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const PORT = 8000;
 app.listen(PORT, "127.0.0.1", () => {

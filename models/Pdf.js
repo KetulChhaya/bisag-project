@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const PdfSchema = new mongoose.Schema({
   userId: { type: mongoose.SchemaTypes.ObjectId, ref: "User" },
-  pdfTitle: { type: String, required: true },
+  title: { type: String },
+  url: { type: mongoose.SchemaTypes.ObjectId, ref: "uploads.files" },
   desc: { type: String },
   branch: [{ type: mongoose.SchemaTypes.ObjectId, ref: "Branch" }],
   subject: { type: mongoose.SchemaTypes.ObjectId, ref: "Subject" },
@@ -11,7 +12,7 @@ const PdfSchema = new mongoose.Schema({
   tags: [{ type: String, default: [] }],
   previews: [{ type: mongoose.SchemaTypes.ObjectId }],
   downloads: [{ type: mongoose.SchemaTypes.ObjectId }],
-  branchName: { type: String, required: true },
+  branchName: { type: String },
 });
 
 module.exports = mongoose.model("Pdf", PdfSchema);
