@@ -6,6 +6,8 @@ const GridFsStorage = require("multer-gridfs-storage").GridFsStorage;
 const Grid = require("gridfs-stream");
 const router = require("express").Router();
 const PDF = require("../models/Pdf");
+const fs = require("fs");
+const { callbackify } = require("util");
 
 const CONN_STRING =
   "mongodb+srv://ketul:ketul1312@cluster0.auxvh.mongodb.net/?retryWrites=true&w=majority";
@@ -20,10 +22,10 @@ const conn = mongoose.createConnection(CONN_STRING, {
 var gfs, gridfsBucket, fileName;
 conn.once("open", () => {
   console.log("DB Connected for PDF");
+  gfs = Grid(conn.db, mongoose.mongo);
   gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
     bucketName: "uploads",
   });
-  gfs = Grid(conn.db, mongoose.mongo);
   gfs.collection("uploads");
 });
 
@@ -37,6 +39,7 @@ const storage = new GridFsStorage({
           return reject(err);
         }
         fileName = buf.toString("hex") + path.extname(file.originalname);
+
         const fileInfo = {
           filename: fileName,
           bucketName: "uploads",
@@ -49,20 +52,82 @@ const storage = new GridFsStorage({
 const upload = multer({ storage });
 
 router.post("/", upload.single("file"), async (req, res) => {
-  const { title, desc } = req.body;
+  const {
+    userId,
+    title,
+    desc,
+    domain,
+    branches,
+    subject,
+    chapter,
+    refExam,
+    tags,
+  } = req.body;
+  console.log(tags, branches);
   const fileId = req.file.id;
+  if (fileId) {
+    try {
+      const pdf = await new PDF({
+        //userId,
+        title,
+        desc,
+        fileId,
+        domain,
+        branch: branches,
+        subject,
+        chapter,
+        //refExam,
+        tags,
+      });
+      await pdf.save();
+      res.status(200).send({
+        title,
+        desc,
+        fileId,
+        domain,
 
-  try {
-    const pdf = await new PDF({
-      title,
-      desc,
-      fileId,
-    });
-    await pdf.save();
-    res.status(200).send(pdf);
-  } catch (error) {
-    console.log(error);
+        subject,
+        chapter,
+        tags,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
+});
+
+router.get("/fetch/pdf", (req, res) => {
+  gfs.files.find().toArray((err, files) => {
+    if (!files || files.length === 0) {
+      res.status(200).json({ files: false });
+    } else {
+      let response = [];
+      files.map((file) => {
+        if (file.contentType === "application/pdf") {
+          let pdfInfo, bufferData;
+          PDF.findOne({ fileId: file._id }, function (err, dataofPdf) {
+            if (err) {
+              console.log(err);
+            } else {
+              pdfInfo = dataofPdf;
+            }
+          });
+
+          var readstream = gfs.createReadStream({ filename: file.filename });
+          readstream.on("data", function (data) {
+            // console.log(data.toString("base64"));
+            bufferData = data;
+          });
+          readstream.on("end", function () {
+            // console.log("Read END");
+            // res.status(200).json(response);
+            // console.log(response);
+            // res.status(200).send({pdfInfo, bufferData})
+          });
+        }
+      });
+    }
+  });
 });
 
 module.exports = router;

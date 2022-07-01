@@ -2,6 +2,7 @@ const router = require("express").Router();
 const Domain = require("../models/Domain");
 const Branch = require("../models/Branch");
 const Exam = require("../models/Exam");
+const Pdf = require("../models/Pdf");
 
 router.get("/domains", async (req, res) => {
   try {
@@ -25,6 +26,15 @@ router.get("/exams", async (req, res) => {
   try {
     const exams = await Exam.find();
     return res.status(200).send(exams);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.get("/fetch/pdf", async (req, res) => {
+  try {
+    const pdfs = await Pdf.find();
+    return res.status(200).send(pdfs);
   } catch (error) {
     console.log(error);
   }
