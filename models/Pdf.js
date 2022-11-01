@@ -2,8 +2,9 @@ const mongoose = require("mongoose");
 
 const PdfSchema = new mongoose.Schema({
   // userId: { type: mongoose.SchemaTypes.ObjectId, ref: "User" },
+  pdf_main_id: { type: String },
+  pdf_main_url: { type: String },
   title: { type: String },
-  fileId: { type: mongoose.SchemaTypes.ObjectId, ref: "uploads.files" },
   desc: { type: String },
   domain: { type: String },
   branch: [{ type: mongoose.SchemaTypes.ObjectId, ref: "branches" }],

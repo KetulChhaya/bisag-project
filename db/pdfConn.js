@@ -98,34 +98,40 @@ router.post("/", upload.single("file"), async (req, res) => {
 
 router.get("/fetch/pdf", (req, res) => {
   gfs.files.find().toArray((err, files) => {
+    // Check if files
+    var response = [];
+
     if (!files || files.length === 0) {
-      res.status(200).json({ files: false });
+      res.status(500).json({ error: "ERROR" });
     } else {
-      let response = [];
       files.map((file) => {
+        var pdfInfo,
+          bufferData = "";
+        var readstream;
         if (file.contentType === "application/pdf") {
-          let pdfInfo, bufferData;
-          PDF.findOne({ fileId: file._id }, function (err, dataofPdf) {
+          PDF.find({ fileId: file._id }, function (err, dataofPdf) {
             if (err) {
               console.log(err);
             } else {
               pdfInfo = dataofPdf;
+              // console.log(dataofPdf)
             }
           });
+          var writestream = gfs.createWriteStream({ filename: file.filename });
+          gfs.createReadStream(file.filename).pipe(writestream);
 
-          var readstream = gfs.createReadStream({ filename: file.filename });
-          readstream.on("data", function (data) {
-            // console.log(data.toString("base64"));
-            bufferData = data;
-          });
-          readstream.on("end", function () {
-            // console.log("Read END");
-            // res.status(200).json(response);
-            // console.log(response);
-            // res.status(200).send({pdfInfo, bufferData})
+          writestream.on("close", function () {
+            readstream = gfs.createReadStream({ filename: file.filename });
+            readstream.on("data", function (chunk) {
+              bufferData += chunk;
+            });
+            readstream.on("end", function () {
+              response.push(pdfInfo);
+            });
           });
         }
       });
+      res.status(200).send(response);
     }
   });
 });
