@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { conn, upload } = require("../db/conn");
+const { conn, upload } = require("../db/pdfConn");
 const MYmodule = require("../db/conn");
 
 router.post("/", upload.single("file"), (req, res) => {
