@@ -96,44 +96,4 @@ router.post("/", upload.single("file"), async (req, res) => {
   }
 });
 
-router.get("/fetch/pdf", (req, res) => {
-  gfs.files.find().toArray((err, files) => {
-    // Check if files
-    var response = [];
-
-    if (!files || files.length === 0) {
-      res.status(500).json({ error: "ERROR" });
-    } else {
-      files.map((file) => {
-        var pdfInfo,
-          bufferData = "";
-        var readstream;
-        if (file.contentType === "application/pdf") {
-          PDF.find({ fileId: file._id }, function (err, dataofPdf) {
-            if (err) {
-              console.log(err);
-            } else {
-              pdfInfo = dataofPdf;
-              // console.log(dataofPdf)
-            }
-          });
-          var writestream = gfs.createWriteStream({ filename: file.filename });
-          gfs.createReadStream(file.filename).pipe(writestream);
-
-          writestream.on("close", function () {
-            readstream = gfs.createReadStream({ filename: file.filename });
-            readstream.on("data", function (chunk) {
-              bufferData += chunk;
-            });
-            readstream.on("end", function () {
-              response.push(pdfInfo);
-            });
-          });
-        }
-      });
-      res.status(200).send(response);
-    }
-  });
-});
-
 module.exports = router;
