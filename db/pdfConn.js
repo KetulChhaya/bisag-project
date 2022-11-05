@@ -7,7 +7,7 @@ const Grid = require("gridfs-stream");
 const router = require("express").Router();
 const PDF = require("../models/Pdf");
 const fs = require("fs");
-const { callbackify } = require("util");
+// const { callbackify } = require("util");
 
 const CONN_STRING =
   "mongodb+srv://ketul:ketul1312@cluster0.auxvh.mongodb.net/?retryWrites=true&w=majority";
