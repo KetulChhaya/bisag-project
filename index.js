@@ -18,7 +18,7 @@ app.use("/api/general/", generalRoutes);
 // app.use("/api/pdf", pdfRoutes);
 app.use("/cloud", cloudinaryRoute);
 app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // SERVER START CONFIG
 const PORT = 8000;
