@@ -46,7 +46,7 @@ router.post("/", upload.single("file"), function (req, res) {
       //   chapter: req.body.chapter,
       //   tags: req.body.tags,
       // });
-      await document.save();
+      // await document.save();
       res.status(201).json(document);
     }
   );
