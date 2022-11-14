@@ -35,16 +35,16 @@ router.post("/", upload.single("file"), function (req, res) {
       fs.unlinkSync(path);
 
       const document = new PDF({
-        pdf_main_id: pdf.asset_id,
-        pdf_main_url: pdf.secure_url,
-        userId: "",
-        title: req.body.title,
-        desc: req.body.desc,
-        domain: req.body.domain,
-        branch: req.body.branches,
-        subject: req.body.subject,
-        chapter: req.body.chapter,
-        tags: req.body.tags,
+        // pdf_main_id: pdf.asset_id,
+        // pdf_main_url: pdf.secure_url,
+        // userId: "",
+        // title: req.body.title,
+        // desc: req.body.desc,
+        // domain: req.body.domain,
+        // branch: req.body.branches,
+        // subject: req.body.subject,
+        // chapter: req.body.chapter,
+        // tags: req.body.tags,
       });
       await document.save();
       // res.status(201).json(document);
