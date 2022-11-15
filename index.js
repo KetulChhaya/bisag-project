@@ -10,12 +10,12 @@ const cloudinaryRoute = require("./cloudinary/index");
 const app = express();
 
 // MIDDLEWARES
-// app.use(bodyParser.json());
-// app.use(methodOverride("_method"));
+app.use(bodyParser.json());
+app.use(methodOverride("_method"));
 app.use(express.json());
 app.use("/api/user", userRoutes);
 app.use("/api/general/", generalRoutes);
-// app.use("/api/pdf", pdfRoutes);
+app.use("/api/pdf", pdfRoutes);
 app.use("/cloud", cloudinaryRoute);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -24,6 +24,4 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const PORT = 8000;
 app.listen(PORT, "127.0.0.1", () => {
   console.log("Server Created Successfully at PORT " + PORT);
-
-  console.log("Last REsolution");
 });
