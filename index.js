@@ -4,7 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/user");
 const generalRoutes = require("./routes/general");
-// const pdfRoutes = require("./db/pdfConn");
+const pdfRoutes = require("./db/pdfConn");
 const cloudinaryRoute = require("./cloudinary/index");
 
 const app = express();
