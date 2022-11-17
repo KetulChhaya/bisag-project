@@ -13,11 +13,11 @@ const app = express();
 app.use(bodyParser.json());
 app.use(methodOverride("_method"));
 app.use(express.json());
-app.use("/api/user", userRoutes);
-app.use("/api/general/", generalRoutes);
-app.use("/api/pdf", pdfRoutes);
-app.use("/cloud", cloudinaryRoute);
-app.use(bodyParser.json());
+// app.use("/api/user", userRoutes);
+// app.use("/api/general/", generalRoutes);
+// app.use("/api/pdf", pdfRoutes);
+// app.use("/cloud", cloudinaryRoute);
+// app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // SERVER START CONFIG
